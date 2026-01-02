@@ -114,3 +114,22 @@ Wir fokussieren 2 Events aus dem EventStorming.
 - Fehlercodes konkretisiert: `404` (not found), `409` (domain conflict), `422` (validation)
 - Governance bereinigt: `Ratified` gesetzt; Constitution-Version auf **1.1.0** erhöht (neues Principle)
 
+
+## Schritt 2 – Specification (speckit.specify)
+
+### Prompt (Input)
+```text
+/speckit.specify Create an Order microservice for a furniture webshop where the shopping cart is modeled as a draft Order 
+(DRAFT -> SUBMITTED -> PAID); customers can create a draft order, add/remove items (with price snapshot), 
+set a shipping address, submit the order (emitting OrderSubmitted), and later confirm payment via an external callback 
+(emitting PaymentConfirmed). The service exposes HTTP endpoints for commands and a read model to retrieve an order with 
+status and items. Stop after writing the spec files; do not run plan/tasks/implement.
+
+```
+
+### Output
+- Speckit hat Feature-Branch `001-draft-order-service` erstellt.
+- Erzeugte Artefakte:
+  - `specs/001-draft-order-service/spec.md`
+  - `specs/001-draft-order-service/checklists/requirements.md` (ohne NEEDS-CLARIFICATION Marker)
+
