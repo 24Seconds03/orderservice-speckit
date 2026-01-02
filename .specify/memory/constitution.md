@@ -35,6 +35,11 @@ Non-negotiable rules:
 
 Rationale: A single bounded context with one aggregate keeps the MVP focused and maintainable.
 
+### Ubiquitous Language (Consistent Terms)
+- Code identifiers MUST be in English (commands/events/entities).
+- Documentation MAY be German, but MUST reference the exact English identifiers.
+- Terms like `Order`, `OrderItem`, `DRAFT`, `SUBMITTED`, `PAID`, `OrderSubmitted`, `PaymentConfirmed` MUST be used consistently across specs, code, tests.
+
 ### Explicit Order Lifecycle State Machine
 The `Order.status` lifecycle is a strict state machine: `DRAFT` → `SUBMITTED` → `PAID`.
 
@@ -65,8 +70,12 @@ The service MUST expose a stable, well-defined HTTP contract.
 Non-negotiable rules:
 - Input validation MUST be explicit and return consistent, structured error responses.
 - The API MUST use appropriate HTTP status codes; internal exceptions MUST NOT leak to clients.
-- Contracts that clients depend on (endpoints, request/response shapes) MUST be documented in
-  `specs/.../contracts/` when changed.
+- Contracts that clients depend on (endpoints, request/response shapes) MUST be documented in the spec (e.g. OpenAPI examples in spec.md or a dedicated contracts section)
+
+Cases:
+- `404` when order not found
+- `409` when lifecycle/invariant violation (e.g. add item after SUBMITTED)
+- `422` for validation errors (schema)
 
 Rationale: A microservice boundary lives or dies by its external contract.
 
@@ -79,6 +88,8 @@ Non-negotiable rules:
   (e.g., `order_id`, command name, resulting status).
 - Prefer the simplest design that satisfies requirements (YAGNI). Introduce async/event-bus
   complexity only with explicit requirements.
+- Payment is modeled as an external system stub; `PaymentConfirmed` is an incoming external callback/event and does not introduce a `Payment` aggregate.
+- Domain events MUST be persisted (outbox table) before being published/logged (no broker required).
 
 Rationale: Simple, observable systems ship faster and are easier to support.
 
@@ -114,4 +125,4 @@ Rationale: Simple, observable systems ship faster and are easier to support.
   - PATCH: clarifications and wording with no semantic change
 - Compliance MUST be re-checked whenever the constitution changes and during feature planning.
 
-**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): original adoption date unknown | **Last Amended**: 2026-01-02
+**Version**: 1.1.0 | **Ratified**: 2026-01-02: original adoption date unknown | **Last Amended**: 2026-01-02
