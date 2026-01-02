@@ -98,3 +98,19 @@ Wir fokussieren 2 Events aus dem EventStorming.
 - Speckit hat zusätzlich Templates angepasst:
   - .specify/templates/plan-template.md
   - .specify/templates/tasks-template.md
+
+### Manuelle Verbesserungen an der Constitution (Review)
+**Probleme im initialen Output**
+- Ubiquitous Language als DDD-Kernprinzip fehlte
+- Event-/External-System-Abgrenzung (Payment) war nicht explizit genug
+- API-Fehlerfälle waren zu unkonkret (Statuscodes nicht festgelegt)
+- Event-Verarbeitung war nicht klar (Outbox vs. Event-Bus)
+
+**Änderungen / Fixes**
+- Added new principle **Ubiquitous Language (Consistent Terms)**: englische Identifiers im Code, deutsche Doku erlaubt, aber gleiche Begriffe
+- Klarstellung: `PaymentConfirmed` ist **externer Callback** (Payment Stub), kein Payment-Aggregate
+- Festgelegt: Domain Events werden über **Outbox Table** persistiert (kein Kafka/Broker im MVP)
+- API-Contract-Regel vereinfacht: Dokumentation direkt in Spec (OpenAPI/Contracts Section)
+- Fehlercodes konkretisiert: `404` (not found), `409` (domain conflict), `422` (validation)
+- Governance bereinigt: `Ratified` gesetzt; Constitution-Version auf **1.1.0** erhöht (neues Principle)
+
