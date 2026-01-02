@@ -84,3 +84,17 @@ Wir fokussieren 2 Events aus dem EventStorming.
   - Domain-Unit-Tests für Invarianten
   - 1–2 API Smoke Tests (FastAPI TestClient)
 - SQLite Schema wird automatisch erzeugt (SQLAlchemy)
+
+## Schritt 1 – Constitution (speckit.constitution)
+
+### Prompt (Input)
+```text
+/speckit.constitution We build a single Python 3.12 microservice called "order-service" for a furniture webshop. We follow Domain-Driven Design and implement exactly one aggregate: Order (cart as draft order with statuses DRAFT -> SUBMITTED -> PAID).
+```
+
+### Output
+- .specify/memory/constitution.md wurde aus Template befüllt (v1.0.0)
+- Sync Impact Report wurde hinzugefügt
+- Speckit hat zusätzlich Templates angepasst:
+  - .specify/templates/plan-template.md
+  - .specify/templates/tasks-template.md

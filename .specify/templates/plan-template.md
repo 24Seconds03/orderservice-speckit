@@ -31,7 +31,12 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Confirm change stays within the single `Order` aggregate boundary
+- Confirm lifecycle rules remain `DRAFT` → `SUBMITTED` → `PAID` (no illegal transitions)
+- Confirm domain invariants are covered by `pytest` unit tests
+- Confirm affected endpoints have at least an API smoke test (e.g., FastAPI `TestClient`)
+- Confirm any contract changes are documented in `specs/.../contracts/`
+- Confirm logs include `order_id` + command/context
 
 ## Project Structure
 

@@ -1,50 +1,117 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: template → 1.0.0
+- Modified principles:
+  - Template placeholder principle 1 → Domain-First DDD (Single Aggregate: Order)
+  - Template placeholder principle 2 → Explicit Order Lifecycle State Machine
+  - Template placeholder principle 3 → Tested Domain Rules (NON-NEGOTIABLE)
+  - Template placeholder principle 4 → Stable HTTP Contract + Clear Errors
+  - Template placeholder principle 5 → Operational Simplicity & Observability
+- Added sections:
+  - Architecture & Technology Constraints
+  - Development Workflow & Quality Gates
+- Removed sections: None
+- Templates requiring updates:
+  - ✅ .specify/templates/plan-template.md
+  - ✅ .specify/templates/spec-template.md (no changes required)
+  - ✅ .specify/templates/tasks-template.md
+  - ⚠ .specify/templates/commands/*.md (directory missing; plan-template references it)
+- Deferred TODOs:
+  - TODO(RATIFICATION_DATE): original adoption date unknown
+-->
+
+# order-service Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Domain-First DDD (Single Aggregate: Order)
+The `order-service` MUST implement exactly one aggregate: `Order`.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Non-negotiable rules:
+- All business invariants MUST be enforced inside the `Order` aggregate boundary.
+- No other aggregates (e.g., `Customer`, `Product`, `Payment`) may be introduced in this service.
+- Other concerns (API, persistence, payment stub, event publishing) MUST adapt to the domain model,
+  not the other way around.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+Rationale: A single bounded context with one aggregate keeps the MVP focused and maintainable.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Explicit Order Lifecycle State Machine
+The `Order.status` lifecycle is a strict state machine: `DRAFT` → `SUBMITTED` → `PAID`.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+Non-negotiable rules:
+- Only the allowed transitions MAY occur; skipping or reversing states is forbidden.
+- Mutations to cart contents and shipping address MUST only be allowed while `status == DRAFT`.
+- `SubmitOrder` MUST validate:
+  - at least one item exists
+  - `shipping_address` is set
+  - `status == DRAFT`
+- `ConfirmPayment` MUST only be allowed when `status == SUBMITTED`.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+Rationale: A strict lifecycle prevents inconsistent orders and makes the API predictable.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### Tested Domain Rules (NON-NEGOTIABLE)
+Changes to domain behavior MUST be accompanied by automated tests.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Non-negotiable rules:
+- All invariants and state transitions MUST have `pytest` unit tests at the domain layer.
+- Any new/changed HTTP endpoint MUST have at least an API smoke test (e.g., FastAPI `TestClient`).
+- If a test is intentionally omitted, the feature spec MUST explicitly waive it and explain why.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+Rationale: The order lifecycle is the business core; tests protect correctness while iterating quickly.
+
+### Stable HTTP Contract + Clear Errors
+The service MUST expose a stable, well-defined HTTP contract.
+
+Non-negotiable rules:
+- Input validation MUST be explicit and return consistent, structured error responses.
+- The API MUST use appropriate HTTP status codes; internal exceptions MUST NOT leak to clients.
+- Contracts that clients depend on (endpoints, request/response shapes) MUST be documented in
+  `specs/.../contracts/` when changed.
+
+Rationale: A microservice boundary lives or dies by its external contract.
+
+### Operational Simplicity & Observability
+The MVP MUST prioritize simple operations and debuggability.
+
+Non-negotiable rules:
+- The baseline stack is Python 3.12, FastAPI, SQLAlchemy, SQLite (file-based in Docker) for MVP.
+- Logging MUST be structured and include enough context to trace an order through its lifecycle
+  (e.g., `order_id`, command name, resulting status).
+- Prefer the simplest design that satisfies requirements (YAGNI). Introduce async/event-bus
+  complexity only with explicit requirements.
+
+Rationale: Simple, observable systems ship faster and are easier to support.
+
+## Architecture & Technology Constraints
+
+- **Language**: Python 3.12.
+- **Service type**: Single microservice named `order-service`.
+- **Domain model**: DDD with exactly one aggregate (`Order`).
+- **Persistence (MVP)**: SQLite via SQLAlchemy.
+- **API (MVP)**: FastAPI HTTP endpoints.
+- **External dependencies**: Payment integration is a stub/simulation unless explicitly expanded.
+- **Out of scope for MVP**: product catalog, inventory, user/auth, shipping, returns.
+
+## Development Workflow & Quality Gates
+
+- Work is spec-driven: feature changes MUST be captured in `specs/<feature>/spec.md`, planned in
+  `specs/<feature>/plan.md`, and executed via `specs/<feature>/tasks.md`.
+- Every plan MUST include a “Constitution Check” section that verifies compliance with these
+  principles before implementation begins.
+- Code review MUST include a brief checklist-style confirmation that:
+  - the single-aggregate rule is preserved
+  - lifecycle invariants remain enforced
+  - relevant tests were added/updated
+  - API contract changes are documented
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- This constitution supersedes other practices and templates.
+- Amendments MUST be made via a documented change (e.g., PR) that includes rationale and scope.
+- Constitution versioning follows semantic versioning:
+  - MAJOR: incompatible governance or principle removals/redefinitions
+  - MINOR: new principles/sections or materially expanded obligations
+  - PATCH: clarifications and wording with no semantic change
+- Compliance MUST be re-checked whenever the constitution changes and during feature planning.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): original adoption date unknown | **Last Amended**: 2026-01-02
