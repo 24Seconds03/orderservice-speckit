@@ -195,3 +195,9 @@ und vermeidet spätere Implementierungs-Unklarheiten.
 - `specs/001-draft-order-service/tasks.md` wurde erzeugt.
 - Tasks sind phasenweise strukturiert: Setup → Foundation → US1 → US2 → US3 → Polish.
 - Tests sind als Pflichtaufgaben enthalten (Domain-Unit-Tests + API Smoke Tests).
+
+## Schritt 4.1 – Feinschliff
+- Kleine Anpassungen für Ausführbarkeit & Konsistenz:
+  - T001 erweitert: vollständige Package-Struktur (api/application/adapters/domain) unter `src/`.
+  - T013 präzisiert: DB-Init via `Base.metadata.create_all()` (MVP).
+  - T046 umformuliert: Implementation muss OpenAPI-Contract erfüllen (Contract als Source of Truth).
