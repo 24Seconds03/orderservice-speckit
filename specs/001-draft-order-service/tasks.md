@@ -86,19 +86,29 @@ description: "Tasks for implementing the Draft Order Microservice"
 
 ### Tests for User Story 2
 
-- [ ] T027 [P] [US2] Add domain tests for submit validation and transition in `tests/domain/test_order_submit.py`
-- [ ] T028 [P] [US2] Add API smoke test for submit flow in `tests/api/test_us2_submit_smoke.py`
+- [x] T027 [P] [US2] Add domain tests for submit validation and transition in `tests/domain/test_order_submit.py`
+
+- [x] T028 [P] [US2] Add API smoke test for submit flow in `tests/api/test_us2_submit_smoke.py`
+
 
 ### Implementation for User Story 2
 
-- [ ] T029 [US2] Implement `ShippingAddress` value object in `src/order_service/domain/value_objects.py`
-- [ ] T030 [US2] Implement `submit()` transition + validation in `src/order_service/domain/order.py` (requires items + complete address)
-- [ ] T031 [US2] Implement `OrderSubmitted` event in `src/order_service/domain/events.py`
-- [ ] T032 [US2] Implement outbox recording helper in `src/order_service/adapters/outbox.py` (insert outbox row within transaction)
-- [ ] T033 [US2] Implement set-address use-case in `src/order_service/application/use_cases/set_shipping_address.py`
-- [ ] T034 [US2] Implement submit-order use-case in `src/order_service/application/use_cases/submit_order.py` (records outbox)
-- [ ] T035 [US2] Implement shipping + submit routes in `src/order_service/api/routes/order_checkout.py` (`PUT /.../shipping-address`, `POST /.../submit`)
-- [ ] T036 [US2] Enforce “no mutations after SUBMITTED” in `src/order_service/domain/order.py` and validate in `src/order_service/application/use_cases/add_item_to_order.py`
+- [x] T029 [US2] Implement `ShippingAddress` value object in `src/order_service/domain/value_objects.py`
+
+- [x] T030 [US2] Implement `submit()` transition + validation in `src/order_service/domain/order.py` (requires items + complete address)
+
+- [x] T031 [US2] Implement `OrderSubmitted` event in `src/order_service/domain/events.py`
+
+- [x] T032 [US2] Implement outbox recording helper in `src/order_service/adapters/outbox.py` (insert outbox row within transaction)
+
+- [x] T033 [US2] Implement set-address use-case in `src/order_service/application/use_cases/set_shipping_address.py`
+
+- [x] T034 [US2] Implement submit-order use-case in `src/order_service/application/use_cases/submit_order.py` (records outbox)
+
+- [x] T035 [US2] Implement shipping + submit routes in `src/order_service/api/routes/order_checkout.py` (`PUT /.../shipping-address`, `POST /.../submit`)
+
+- [x] T036 [US2] Enforce “no mutations after SUBMITTED” in `src/order_service/domain/order.py` and validate in `src/order_service/application/use_cases/add_item_to_order.py`
+
 
 **Checkpoint**: US2 submit flow works and emits one `OrderSubmitted` outbox event.
 

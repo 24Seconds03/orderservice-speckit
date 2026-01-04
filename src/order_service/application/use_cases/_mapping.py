@@ -1,14 +1,31 @@
 from __future__ import annotations
 
+import datetime as dt
 from uuid import UUID
 
 from order_service.adapters.models import OrderItemTable, OrderTable
 from order_service.domain.order import Order
 from order_service.domain.types import OrderStatus
-from order_service.domain.value_objects import OrderItem, PriceSnapshot
+from order_service.domain.value_objects import OrderItem, PriceSnapshot, ShippingAddress
 
 
 def order_table_to_domain(order: OrderTable) -> Order:
+    shipping_address = None
+    if (
+        order.shipping_recipient_name is not None
+        and order.shipping_street is not None
+        and order.shipping_postal_code is not None
+        and order.shipping_city is not None
+        and order.shipping_country is not None
+    ):
+        shipping_address = ShippingAddress(
+            recipient_name=order.shipping_recipient_name,
+            street=order.shipping_street,
+            postal_code=order.shipping_postal_code,
+            city=order.shipping_city,
+            country=order.shipping_country,
+        )
+
     return Order(
         order_id=UUID(order.id),
         customer_id=order.customer_id,
@@ -22,11 +39,33 @@ def order_table_to_domain(order: OrderTable) -> Order:
             )
             for item in order.items
         ],
+        shipping_address=shipping_address,
     )
 
 
 def apply_domain_to_order_table(domain: Order, table: OrderTable) -> None:
+    previous_status = table.status
     table.status = domain.status.value
+
+    if (
+        previous_status != table.status
+        and table.status == OrderStatus.SUBMITTED.value
+        and table.submitted_at is None
+    ):
+        table.submitted_at = dt.datetime.utcnow()
+
+    if domain.shipping_address is None:
+        table.shipping_recipient_name = None
+        table.shipping_street = None
+        table.shipping_postal_code = None
+        table.shipping_city = None
+        table.shipping_country = None
+    else:
+        table.shipping_recipient_name = domain.shipping_address.recipient_name
+        table.shipping_street = domain.shipping_address.street
+        table.shipping_postal_code = domain.shipping_address.postal_code
+        table.shipping_city = domain.shipping_address.city
+        table.shipping_country = domain.shipping_address.country
 
     by_product_id = {item.product_id: item for item in domain.items}
 
@@ -56,6 +95,22 @@ def apply_domain_to_order_table(domain: Order, table: OrderTable) -> None:
 
 
 def order_table_to_read_model(order: OrderTable) -> dict:
+    shipping_address = None
+    if (
+        order.shipping_recipient_name is not None
+        and order.shipping_street is not None
+        and order.shipping_postal_code is not None
+        and order.shipping_city is not None
+        and order.shipping_country is not None
+    ):
+        shipping_address = {
+            "recipient_name": order.shipping_recipient_name,
+            "street": order.shipping_street,
+            "postal_code": order.shipping_postal_code,
+            "city": order.shipping_city,
+            "country": order.shipping_country,
+        }
+
     return {
         "order_id": order.id,
         "customer_id": order.customer_id,
@@ -72,6 +127,6 @@ def order_table_to_read_model(order: OrderTable) -> dict:
             }
             for item in order.items
         ],
-        "shipping_address": None,
+        "shipping_address": shipping_address,
         "payment_reference": order.payment_reference,
     }

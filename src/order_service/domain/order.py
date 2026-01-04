@@ -4,8 +4,9 @@ from dataclasses import dataclass, field
 from uuid import UUID
 
 from order_service.domain.errors import ConflictError, DomainValidationError
+from order_service.domain.events import OrderSubmitted
 from order_service.domain.types import OrderStatus
-from order_service.domain.value_objects import OrderItem, PriceSnapshot
+from order_service.domain.value_objects import OrderItem, PriceSnapshot, ShippingAddress
 
 
 @dataclass(slots=True)
@@ -14,6 +15,7 @@ class Order:
     customer_id: str
     status: OrderStatus
     items: list[OrderItem] = field(default_factory=list)
+    shipping_address: ShippingAddress | None = None
 
     @classmethod
     def create_draft(cls, *, order_id: UUID, customer_id: str) -> "Order":
@@ -74,6 +76,28 @@ class Order:
             message="Order does not contain requested product",
             details={"product_id": product_id},
         )
+
+    def set_shipping_address(self, address: ShippingAddress) -> None:
+        self._require_draft("set_shipping_address")
+        self.shipping_address = address
+
+    def submit(self) -> OrderSubmitted:
+        self._require_draft("submit")
+
+        if not self.items:
+            raise DomainValidationError(
+                error_code="EMPTY_ORDER",
+                message="Cannot submit an order with no items",
+            )
+
+        if self.shipping_address is None:
+            raise DomainValidationError(
+                error_code="MISSING_SHIPPING_ADDRESS",
+                message="Shipping address is required before submit",
+            )
+
+        self.status = OrderStatus.SUBMITTED
+        return OrderSubmitted(order_id=self.order_id, customer_id=self.customer_id)
 
     def _require_draft(self, command: str) -> None:
         if self.status != OrderStatus.DRAFT:

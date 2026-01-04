@@ -43,14 +43,19 @@ router = APIRouter(tags=["orders"])
 
 
 @router.post("/customers/{customer_id}/orders/draft", response_model=OrderReadModelDto)
-def create_or_get_draft(customer_id: str, session: Session = Depends(get_session)) -> dict:
+def create_or_get_draft(
+    customer_id: str,
+    session: Session = Depends(get_session),  # noqa: B008
+) -> dict:
     uow = UnitOfWork(session)
     return create_or_get_draft_order(uow=uow, customer_id=customer_id)
 
 
 @router.get("/customers/{customer_id}/orders/{order_id}", response_model=OrderReadModelDto)
 def get_order_route(
-    customer_id: str, order_id: str, session: Session = Depends(get_session)
+    customer_id: str,
+    order_id: str,
+    session: Session = Depends(get_session),  # noqa: B008
 ) -> dict:
     uow = UnitOfWork(session)
     return get_order(uow=uow, customer_id=customer_id, order_id=order_id)

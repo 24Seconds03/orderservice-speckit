@@ -5,11 +5,10 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from order_service.adapters.db import get_session
+from order_service.api.routes.orders import OrderReadModelDto
 from order_service.application.unit_of_work import UnitOfWork
 from order_service.application.use_cases.add_item_to_order import add_item_to_order
 from order_service.application.use_cases.remove_item_from_order import remove_item_from_order
-
-from .orders import OrderReadModelDto
 
 
 class AddItemRequestDto(BaseModel):
@@ -31,7 +30,7 @@ def add_item_route(
     customer_id: str,
     order_id: str,
     body: AddItemRequestDto,
-    session: Session = Depends(get_session),
+    session: Session = Depends(get_session),  # noqa: B008
 ) -> dict:
     uow = UnitOfWork(session)
     return add_item_to_order(
@@ -54,7 +53,7 @@ def remove_item_route(
     customer_id: str,
     order_id: str,
     product_id: str,
-    session: Session = Depends(get_session),
+    session: Session = Depends(get_session),  # noqa: B008
 ) -> dict:
     uow = UnitOfWork(session)
     return remove_item_from_order(

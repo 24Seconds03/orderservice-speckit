@@ -12,7 +12,6 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-
 SRC_PATH = Path(__file__).resolve().parents[1] / "src"
 sys.path.insert(0, str(SRC_PATH))
 
@@ -21,9 +20,9 @@ db_module = importlib.import_module("order_service.adapters.db")
 models_module = importlib.import_module("order_service.adapters.models")
 api_main_module = importlib.import_module("order_service.api.main")
 
-get_session = getattr(db_module, "get_session")
-Base = getattr(models_module, "Base")
-create_app = getattr(api_main_module, "create_app")
+get_session = db_module.get_session
+Base = models_module.Base
+create_app = api_main_module.create_app
 
 
 @pytest.fixture
@@ -36,16 +35,12 @@ def test_engine() -> Engine:
     Base.metadata.create_all(bind=engine)
 
     # Ensure app startup `init_db()` targets the test engine.
-    setattr(db_module, "engine", engine)
-    setattr(
-        db_module,
-        "SessionLocal",
-        sessionmaker(
-            bind=engine,
-            autoflush=False,
-            autocommit=False,
-            expire_on_commit=False,
-        ),
+    db_module.engine = engine
+    db_module.SessionLocal = sessionmaker(
+        bind=engine,
+        autoflush=False,
+        autocommit=False,
+        expire_on_commit=False,
     )
 
     return engine
