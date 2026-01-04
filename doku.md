@@ -183,3 +183,15 @@ und vermeidet spätere Implementierungs-Unklarheiten.
 
 - Preis-Snapshot auf `unit_price_cents` vereinheitlicht (Spec/Contract/Data Model/Quickstart).
 - Quickstart Curl-Examples an Contract angepasst.
+
+## Schritt 4 – Tasks (speckit.tasks)
+
+### Prompt (Input)
+```text
+/speckit.tasks (Stop after writing tasks.md)
+```
+
+### Output
+- `specs/001-draft-order-service/tasks.md` wurde erzeugt.
+- Tasks sind phasenweise strukturiert: Setup → Foundation → US1 → US2 → US3 → Polish.
+- Tests sind als Pflichtaufgaben enthalten (Domain-Unit-Tests + API Smoke Tests).
