@@ -59,20 +59,20 @@ description: "Tasks for implementing the Draft Order Microservice"
 
 ### Tests for User Story 1
 
-- [ ] T016 [P] [US1] Add domain tests for draft cart behavior in `tests/domain/test_order_cart.py`
-- [ ] T017 [P] [US1] Add API smoke test for cart flow in `tests/api/test_us1_cart_smoke.py`
+- [x] T016 [P] [US1] Add domain tests for draft cart behavior in `tests/domain/test_order_cart.py`
+- [x] T017 [P] [US1] Add API smoke test for cart flow in `tests/api/test_us1_cart_smoke.py`
 
 ### Implementation for User Story 1
 
-- [ ] T018 [US1] Implement value objects `PriceSnapshot` + `OrderItem` in `src/order_service/domain/value_objects.py`
-- [ ] T019 [US1] Implement `Order` aggregate draft + item mutations in `src/order_service/domain/order.py` (add/remove/increase qty)
-- [ ] T020 [US1] Implement create/get draft use-case in `src/order_service/application/use_cases/create_or_get_draft_order.py`
-- [ ] T021 [US1] Implement add-item use-case in `src/order_service/application/use_cases/add_item_to_order.py`
-- [ ] T022 [US1] Implement remove-item use-case in `src/order_service/application/use_cases/remove_item_from_order.py`
-- [ ] T023 [US1] Implement get-order read-model use-case in `src/order_service/application/use_cases/get_order.py`
-- [ ] T024 [US1] Implement order routes in `src/order_service/api/routes/orders.py` (`POST /customers/{customer_id}/orders/draft`, `GET /customers/{customer_id}/orders/{order_id}`)
-- [ ] T025 [US1] Implement item routes + DTOs in `src/order_service/api/routes/order_items.py` (`POST /.../items`, `DELETE /.../items/{product_id}`)
-- [ ] T026 [US1] Enforce “one DRAFT per customer” constraint in `src/order_service/adapters/models.py` (partial unique index) and handle conflicts in `src/order_service/application/use_cases/create_or_get_draft_order.py`
+- [x] T018 [US1] Implement value objects `PriceSnapshot` + `OrderItem` in `src/order_service/domain/value_objects.py`
+- [x] T019 [US1] Implement `Order` aggregate draft + item mutations in `src/order_service/domain/order.py` (add/remove/increase qty)
+- [x] T020 [US1] Implement create/get draft use-case in `src/order_service/application/use_cases/create_or_get_draft_order.py`
+- [x] T021 [US1] Implement add-item use-case in `src/order_service/application/use_cases/add_item_to_order.py`
+- [x] T022 [US1] Implement remove-item use-case in `src/order_service/application/use_cases/remove_item_from_order.py`
+- [x] T023 [US1] Implement get-order read-model use-case in `src/order_service/application/use_cases/get_order.py`
+- [x] T024 [US1] Implement order routes in `src/order_service/api/routes/orders.py` (`POST /customers/{customer_id}/orders/draft`, `GET /customers/{customer_id}/orders/{order_id}`)
+- [x] T025 [US1] Implement item routes + DTOs in `src/order_service/api/routes/order_items.py` (`POST /.../items`, `DELETE /.../items/{product_id}`)
+- [x] T026 [US1] Enforce “one DRAFT per customer” constraint in `src/order_service/adapters/models.py` (partial unique index) and handle conflicts in `src/order_service/application/use_cases/create_or_get_draft_order.py`
 
 **Checkpoint**: US1 endpoints work and smoke test passes.
 
