@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from uuid import UUID
 
 from order_service.domain.errors import ConflictError, DomainValidationError
-from order_service.domain.events import OrderSubmitted
+from order_service.domain.events import OrderSubmitted, PaymentConfirmed
 from order_service.domain.types import OrderStatus
 from order_service.domain.value_objects import OrderItem, PriceSnapshot, ShippingAddress
 
@@ -16,6 +16,7 @@ class Order:
     status: OrderStatus
     items: list[OrderItem] = field(default_factory=list)
     shipping_address: ShippingAddress | None = None
+    payment_reference: str | None = None
 
     @classmethod
     def create_draft(cls, *, order_id: UUID, customer_id: str) -> "Order":
@@ -98,6 +99,34 @@ class Order:
 
         self.status = OrderStatus.SUBMITTED
         return OrderSubmitted(order_id=self.order_id, customer_id=self.customer_id)
+
+    def confirm_payment(self, *, payment_reference: str) -> PaymentConfirmed | None:
+        if not payment_reference:
+            raise DomainValidationError(
+                error_code="INVALID_PAYMENT_REFERENCE",
+                message="payment_reference is required",
+            )
+
+        if self.status == OrderStatus.PAID:
+            if self.payment_reference == payment_reference:
+                return None
+
+            raise ConflictError(
+                error_code="PAYMENT_REFERENCE_MISMATCH",
+                message="Order already paid with different payment_reference",
+                details={"payment_reference": self.payment_reference},
+            )
+
+        if self.status != OrderStatus.SUBMITTED:
+            raise ConflictError(
+                error_code="INVALID_STATUS",
+                message="confirm_payment allowed only for SUBMITTED orders",
+                details={"status": self.status.value},
+            )
+
+        self.status = OrderStatus.PAID
+        self.payment_reference = payment_reference
+        return PaymentConfirmed(order_id=self.order_id, payment_reference=payment_reference)
 
     def _require_draft(self, command: str) -> None:
         if self.status != OrderStatus.DRAFT:

@@ -122,18 +122,27 @@ description: "Tasks for implementing the Draft Order Microservice"
 
 ### Tests for User Story 3
 
-- [ ] T037 [P] [US3] Add domain tests for confirm payment idempotency in `tests/domain/test_order_payment.py`
-- [ ] T038 [P] [US3] Add API smoke test for payment callback in `tests/api/test_us3_payment_smoke.py`
+- [x] T037 [P] [US3] Add domain tests for confirm payment idempotency in `tests/domain/test_order_payment.py`
+
+- [x] T038 [P] [US3] Add API smoke test for payment callback in `tests/api/test_us3_payment_smoke.py`
+
 
 ### Implementation for User Story 3
 
-- [ ] T039 [US3] Implement `PaymentConfirmed` event in `src/order_service/domain/events.py`
-- [ ] T040 [US3] Implement `confirm_payment()` transition in `src/order_service/domain/order.py` (only SUBMITTED; idempotent on same reference)
-- [ ] T041 [US3] Implement confirm-payment use-case in `src/order_service/application/use_cases/confirm_payment.py` (records outbox with unique `dedup_key`)
-- [ ] T042 [US3] Add callback auth simulation in `src/order_service/api/dependencies.py` (validate `X-Callback-Token`)
-- [ ] T043 [US3] Implement payment callback route in `src/order_service/api/routes/payments.py` (`POST /payments/confirmations`)
-- [ ] T044 [US3] Add outbox dedup constraint in `src/order_service/adapters/models.py` (`outbox_events.dedup_key` unique) and enforce consistent `dedup_key` generation in `src/order_service/adapters/outbox.py`
-- [ ] T045 [US3] Handle unknown order / invalid status errors in `src/order_service/api/error_handlers.py` for payment confirmations
+- [x] T039 [US3] Implement `PaymentConfirmed` event in `src/order_service/domain/events.py`
+
+- [x] T040 [US3] Implement `confirm_payment()` transition in `src/order_service/domain/order.py` (only SUBMITTED; idempotent on same reference)
+
+- [x] T041 [US3] Implement confirm-payment use-case in `src/order_service/application/use_cases/confirm_payment.py` (records outbox with unique `dedup_key`)
+
+- [x] T042 [US3] Add callback auth simulation in `src/order_service/api/dependencies.py` (validate `X-Callback-Token`)
+
+- [x] T043 [US3] Implement payment callback route in `src/order_service/api/routes/payments.py` (`POST /payments/confirmations`)
+
+- [x] T044 [US3] Add outbox dedup constraint in `src/order_service/adapters/models.py` (`outbox_events.dedup_key` unique) and enforce consistent `dedup_key` generation in `src/order_service/adapters/outbox.py`
+
+- [x] T045 [US3] Handle unknown order / invalid status errors in `src/order_service/api/error_handlers.py` for payment confirmations
+
 
 **Checkpoint**: US3 callback is idempotent and emits exactly one `PaymentConfirmed` outbox event.
 

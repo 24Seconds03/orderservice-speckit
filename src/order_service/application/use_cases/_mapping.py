@@ -30,6 +30,7 @@ def order_table_to_domain(order: OrderTable) -> Order:
         order_id=UUID(order.id),
         customer_id=order.customer_id,
         status=OrderStatus(order.status),
+        payment_reference=order.payment_reference,
         items=[
             OrderItem(
                 product_id=item.product_id,
@@ -53,6 +54,15 @@ def apply_domain_to_order_table(domain: Order, table: OrderTable) -> None:
         and table.submitted_at is None
     ):
         table.submitted_at = dt.datetime.utcnow()
+
+    if (
+        previous_status != table.status
+        and table.status == OrderStatus.PAID.value
+        and table.paid_at is None
+    ):
+        table.paid_at = dt.datetime.utcnow()
+
+    table.payment_reference = domain.payment_reference
 
     if domain.shipping_address is None:
         table.shipping_recipient_name = None

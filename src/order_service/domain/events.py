@@ -19,3 +19,20 @@ class OrderSubmitted:
             "order_id": str(self.order_id),
             "customer_id": self.customer_id,
         }
+
+
+@dataclass(frozen=True, slots=True)
+class PaymentConfirmed:
+    order_id: UUID
+    payment_reference: str
+
+    @property
+    def event_type(self) -> str:
+        return "PaymentConfirmed"
+
+    @property
+    def payload(self) -> dict[str, str]:
+        return {
+            "order_id": str(self.order_id),
+            "payment_reference": self.payment_reference,
+        }
