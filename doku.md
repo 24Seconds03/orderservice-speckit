@@ -161,3 +161,20 @@ Bei der Review haben wir aber Punkte gefunden, die nicht optimal zum MVP-Scope u
 ### Ergebnis
 Die Spezifikation ist nun konsistent zur Constitution (Scope klein, 1 Aggregate, klare Invarianten, testbare Regeln)
 und vermeidet spätere Implementierungs-Unklarheiten.
+
+## Schritt 3 – Plan (speckit.plan)
+
+### Prompt (Input)
+```text
+/speckit.plan The application is a single Python 3.12 microservice called "order-service" built with FastAPI, following major DDD patterns with exactly one aggregate (Order) and a clean layered structure (domain/application/adapters/api). Use SQLAlchemy as ORM with a local SQLite database (file-based in Docker). Implement the draft order lifecycle (DRAFT -> SUBMITTED -> PAID) with OrderSubmitted and PaymentConfirmed events recorded via an outbox table (no message broker). Provide pytest tests (domain invariants + 1-2 API smoke tests) and Docker run instructions. Stop after writing the plan files; do not run tasks or implement.
+```
+
+### Output
+- Speckit hat Plan-/Design-Artefakte erzeugt (ohne Tasks/Implement).
+- Erzeugte Dateien:
+  - `specs/001-draft-order-service/plan.md`
+  - `specs/001-draft-order-service/data-model.md`
+  - `specs/001-draft-order-service/research.md`
+  - `specs/001-draft-order-service/quickstart.md`
+  - `specs/001-draft-order-service/contracts/openapi.yaml`
+- Zusätzlich wurde AGENTS.md aktualisiert (Agent-Kontext).
