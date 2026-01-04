@@ -22,7 +22,7 @@ description: "Tasks for implementing the Draft Order Microservice"
 
 **Purpose**: Project initialization and repository structure
 
-- [ ] T001 Create package directories and markers in `src/order_service/__init__.py`
+- [ ] T001 Create package structure in `src/order_service/` (api/, application/, adapters/, domain/) and add `__init__.py` markers
 - [ ] T002 [P] Define runtime dependencies in `requirements.txt`
 - [ ] T003 [P] Define dev tooling config in `pyproject.toml` (pytest + ruff)
 - [ ] T004 [P] Add Docker build configuration in `Dockerfile` and `.dockerignore`
@@ -43,7 +43,7 @@ description: "Tasks for implementing the Draft Order Microservice"
 - [ ] T010 Implement repository interface + concrete SQLAlchemy repo in `src/order_service/adapters/order_repository.py`
 - [ ] T011 Implement unit-of-work (transaction boundary) in `src/order_service/application/unit_of_work.py`
 - [ ] T012 Implement API error mapping + handlers in `src/order_service/api/error_handlers.py` (404/409/422 shapes)
-- [ ] T013 Create FastAPI app + router wiring in `src/order_service/api/main.py` (startup creates tables, registers handlers)
+- [ ] T013 Create FastAPI app + router wiring in `src/order_service/api/main.py` (startup calls `Base.metadata.create_all()` for MVP)
 - [ ] T014 [P] Add shared test fixtures in `tests/conftest.py` (temporary SQLite DB, FastAPI `TestClient`)
 - [ ] T015 [P] Add structured logging setup in `src/order_service/logging.py` (include `order_id` context)
 
@@ -133,7 +133,7 @@ description: "Tasks for implementing the Draft Order Microservice"
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T046 [P] Ensure OpenAPI examples align with implementation in `specs/001-draft-order-service/contracts/openapi.yaml`
+- [ ] T046 [P] Verify implementation matches `specs/001-draft-order-service/contracts/openapi.yaml` (endpoints, schemas, status codes); update the contract only if the spec changes
 - [ ] T047 Add Docker run docs verification and env var notes in `specs/001-draft-order-service/quickstart.md`
 - [ ] T048 Add repository-level smoke validation instructions in `doku.md` (link to `specs/001-draft-order-service/quickstart.md`)
 - [ ] T049 [P] Add additional domain edge-case tests in `tests/domain/test_order_edge_cases.py` (wrong customer, remove missing item, submit empty)
