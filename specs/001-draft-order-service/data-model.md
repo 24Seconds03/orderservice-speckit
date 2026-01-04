@@ -42,7 +42,7 @@ Represents one product line in an order. `Order` is the aggregate root.
 - `quantity` (int, > 0)
 
 **Price snapshot (captured at add-time; never recomputed)**
-- `unit_price` (decimal)
+- `unit_price_cents` (int)
 - `currency` (string, ISO-4217-like; e.g., `EUR`)
 
 **Constraints**
@@ -87,7 +87,7 @@ Minimum payload:
 - `product_id`
 - `product_name` (nullable)
 - `quantity`
-- `unit_price`
+- `unit_price_cents`
 - `currency`
 
 **Indexes/Constraints**

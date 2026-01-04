@@ -180,12 +180,12 @@ components:
     MoneySnapshot:
       type: object
       additionalProperties: false
-      required: [unit_price, currency]
+      required: [unit_price_cents, currency]
       properties:
-        unit_price:
-          type: string
-          description: Decimal formatted as string
-          example: '199.99'
+        unit_price_cents:
+          type: integer
+          description: Price in cents
+          example: 19999
         currency:
           type: string
           example: EUR
@@ -232,14 +232,14 @@ components:
     AddItemRequest:
       type: object
       additionalProperties: false
-      required: [product_id, quantity, unit_price, currency]
+      required: [product_id, quantity, unit_price_cents, currency]
       properties:
         product_id: { type: string }
         product_name: { type: string, nullable: true }
         quantity: { type: integer, minimum: 1 }
-        unit_price:
-          type: string
-          description: Decimal formatted as string
+        unit_price_cents:
+          type: integer
+          description: Price in cents
         currency:
           type: string
           example: EUR

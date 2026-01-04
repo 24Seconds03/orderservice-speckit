@@ -47,7 +47,7 @@ specs/001-draft-order-service/
 ### Source Code (repository root)
 
 ```text
-order_service/
+src/order_service/
 ├── api/                 # FastAPI routes + request/response DTOs
 ├── application/         # Use-cases (command handlers), unit-of-work
 ├── adapters/            # DB/outbox implementations and repositories

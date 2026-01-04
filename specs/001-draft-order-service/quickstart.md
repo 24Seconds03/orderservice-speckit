@@ -60,7 +60,7 @@ curl -X POST http://localhost:8000/customers/cust-1/orders/draft
 ```bash
 curl -X POST http://localhost:8000/customers/cust-1/orders/<order_id>/items \
   -H "Content-Type: application/json" \
-  -d '{"product_id":"P1","quantity":1,"unit_price":"199.99","currency":"EUR"}'
+  -d '{"product_id":"P1","quantity":1,"unit_price_cents":"19999","currency":"EUR"}'
 ```
 
 3) Set shipping address:
