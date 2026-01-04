@@ -35,17 +35,17 @@ description: "Tasks for implementing the Draft Order Microservice"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Implement settings/env loading in `src/order_service/config.py` (DATABASE_URL, CALLBACK_TOKEN)
-- [ ] T006 [P] Add domain primitives in `src/order_service/domain/types.py` (UUID type alias, `OrderStatus` enum)
-- [ ] T007 [P] Add domain exceptions in `src/order_service/domain/errors.py` (NotFound, Conflict, ValidationError)
-- [ ] T008 Implement SQLAlchemy engine + session dependency in `src/order_service/adapters/db.py`
-- [ ] T009 Define SQLAlchemy ORM tables in `src/order_service/adapters/models.py` (`orders`, `order_items`, `outbox_events`, indexes)
-- [ ] T010 Implement repository interface + concrete SQLAlchemy repo in `src/order_service/adapters/order_repository.py`
-- [ ] T011 Implement unit-of-work (transaction boundary) in `src/order_service/application/unit_of_work.py`
-- [ ] T012 Implement API error mapping + handlers in `src/order_service/api/error_handlers.py` (404/409/422 shapes)
-- [ ] T013 Create FastAPI app + router wiring in `src/order_service/api/main.py` (startup calls `Base.metadata.create_all()` for MVP)
-- [ ] T014 [P] Add shared test fixtures in `tests/conftest.py` (temporary SQLite DB, FastAPI `TestClient`)
-- [ ] T015 [P] Add structured logging setup in `src/order_service/logging.py` (include `order_id` context)
+- [x] T005 Implement settings/env loading in `src/order_service/config.py` (DATABASE_URL, CALLBACK_TOKEN)
+- [x] T006 [P] Add domain primitives in `src/order_service/domain/types.py` (UUID type alias, `OrderStatus` enum)
+- [x] T007 [P] Add domain exceptions in `src/order_service/domain/errors.py` (NotFound, Conflict, ValidationError)
+- [x] T008 Implement SQLAlchemy engine + session dependency in `src/order_service/adapters/db.py`
+- [x] T009 Define SQLAlchemy ORM tables in `src/order_service/adapters/models.py` (`orders`, `order_items`, `outbox_events`, indexes)
+- [x] T010 Implement repository interface + concrete SQLAlchemy repo in `src/order_service/adapters/order_repository.py`
+- [x] T011 Implement unit-of-work (transaction boundary) in `src/order_service/application/unit_of_work.py`
+- [x] T012 Implement API error mapping + handlers in `src/order_service/api/error_handlers.py` (404/409/422 shapes)
+- [x] T013 Create FastAPI app + router wiring in `src/order_service/api/main.py` (startup calls `Base.metadata.create_all()` for MVP)
+- [x] T014 [P] Add shared test fixtures in `tests/conftest.py` (temporary SQLite DB, FastAPI `TestClient`)
+- [x] T015 [P] Add structured logging setup in `src/order_service/logging.py` (include `order_id` context)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
