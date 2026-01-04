@@ -47,7 +47,9 @@ docker run --rm -p 8000:8000 \
 ```
 
 - The SQLite DB file is stored at `/data/orders.db`.
+- `DATABASE_URL` must point at the mounted DB file (example uses `sqlite:////data/orders.db`).
 - `CALLBACK_TOKEN` simulates a trusted upstream for `POST /payments/confirmations` via the `X-Callback-Token` header.
+- If `X-Callback-Token` is missing, the API returns `422`; if it is present but wrong, the API returns `409`.
 
 ### Smoke test (manual)
 
@@ -60,7 +62,7 @@ curl -X POST http://localhost:8000/customers/cust-1/orders/draft
 ```bash
 curl -X POST http://localhost:8000/customers/cust-1/orders/<order_id>/items \
   -H "Content-Type: application/json" \
-  -d '{"product_id":"P1","quantity":1,"unit_price_cents":"19999","currency":"EUR"}'
+  -d '{"product_id":"P1","quantity":1,"unit_price_cents":19999,"currency":"EUR"}'
 ```
 
 3) Set shipping address:

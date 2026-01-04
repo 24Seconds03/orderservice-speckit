@@ -201,3 +201,21 @@ und vermeidet spätere Implementierungs-Unklarheiten.
   - T001 erweitert: vollständige Package-Struktur (api/application/adapters/domain) unter `src/`.
   - T013 präzisiert: DB-Init via `Base.metadata.create_all()` (MVP).
   - T046 umformuliert: Implementation muss OpenAPI-Contract erfüllen (Contract als Source of Truth).
+
+## Smoke Validation (Repo)
+
+Siehe auch: `specs/001-draft-order-service/quickstart.md`
+
+### Lokal (Python)
+
+```bash
+python -m venv .venv
+pip install -r requirements.txt
+ruff check .
+pytest -q
+```
+
+### Manuell (HTTP)
+
+- Starte den Service (z.B. via `uvicorn order_service.api.main:app --reload`).
+- Folge den Curl-Schritten in `specs/001-draft-order-service/quickstart.md`.

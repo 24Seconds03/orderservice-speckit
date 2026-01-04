@@ -152,11 +152,16 @@ description: "Tasks for implementing the Draft Order Microservice"
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T046 [P] Verify implementation matches `specs/001-draft-order-service/contracts/openapi.yaml` (endpoints, schemas, status codes); update the contract only if the spec changes
-- [ ] T047 Add Docker run docs verification and env var notes in `specs/001-draft-order-service/quickstart.md`
-- [ ] T048 Add repository-level smoke validation instructions in `doku.md` (link to `specs/001-draft-order-service/quickstart.md`)
-- [ ] T049 [P] Add additional domain edge-case tests in `tests/domain/test_order_edge_cases.py` (wrong customer, remove missing item, submit empty)
-- [ ] T050 Run formatting and lint configuration checks in `pyproject.toml` (ruff, pytest options)
+- [x] T046 [P] Verify implementation matches `specs/001-draft-order-service/contracts/openapi.yaml` (endpoints, schemas, status codes); update the contract only if the spec changes
+
+- [x] T047 Add Docker run docs verification and env var notes in `specs/001-draft-order-service/quickstart.md`
+
+- [x] T048 Add repository-level smoke validation instructions in `doku.md` (link to `specs/001-draft-order-service/quickstart.md`)
+
+- [x] T049 [P] Add additional domain edge-case tests in `tests/domain/test_order_edge_cases.py` (wrong customer, remove missing item, submit empty)
+
+- [x] T050 Run formatting and lint configuration checks in `pyproject.toml` (ruff, pytest options)
+
 
 ---
 
