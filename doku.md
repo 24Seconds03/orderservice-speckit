@@ -133,3 +133,31 @@ status and items. Stop after writing the spec files; do not run plan/tasks/imple
   - `specs/001-draft-order-service/spec.md`
   - `specs/001-draft-order-service/checklists/requirements.md` (ohne NEEDS-CLARIFICATION Marker)
 
+## Schritt 2.1 – Spezifikation nachgeschärft (Manual Review)
+
+### Ausgangslage (speckit.specify Output)
+Die initiale Spezifikation war bereits sehr vollständig (User Stories, FRs, Edge Cases, Success Criteria).
+Bei der Review haben wir aber Punkte gefunden, die nicht optimal zum MVP-Scope und zur Constitution passen.
+
+### Probleme / Unklarheiten im initialen Output
+- **Scope-Creep durch Auth/Security**: FR-015/FR-016 klangen nach echter Authentifizierung/Autorisierung, was nicht Teil des MVP sein soll.
+- **Draft-Order-Regel nur implizit**: “Customer with no current draft order” implizierte max. 1 Draft pro Kunde, war aber nicht als klare Regel/Requirement festgehalten.
+- **AddItem-Duplikate nicht definiert**: Unklar, was passiert, wenn dieselbe `productId` mehrfach hinzugefügt wird.
+- **Events nur “emit” ohne Zuverlässigkeit**: Es war nicht klar, ob Events zuverlässig erfasst werden (Konsistenz zur Constitution: durable recording / outbox).
+
+### Änderungen / Verbesserungen
+- **Ownership statt Auth**:
+  - FR-015 angepasst: Orders werden an `customerId` gebunden; Requests mit falschem `customerId` werden abgelehnt.
+  - FR-016 angepasst: Payment-Callback ist “trusted upstream”; echte Trust-Mechanik ist out-of-scope und wird im MVP simuliert.
+- **Max. eine Draft Order pro Kunde**:
+  - Business Rule + Acceptance Scenario ergänzt.
+  - FR-001a ergänzt: erneutes “CreateDraftOrder” liefert bestehende Draft zurück (keine zweite Draft).
+- **AddItem-Verhalten bei Duplikaten**:
+  - Acceptance Scenario ergänzt.
+  - FR-003a ergänzt: gleiche `productId` erhöht Quantity statt neue Line Item zu erzeugen.
+- **Durable Event Recording**:
+  - FR-011a ergänzt: `OrderSubmitted`/`PaymentConfirmed` müssen vor Publish/Notify zuverlässig erfasst werden (z.B. persisted outbox), um Eventverlust zu vermeiden.
+
+### Ergebnis
+Die Spezifikation ist nun konsistent zur Constitution (Scope klein, 1 Aggregate, klare Invarianten, testbare Regeln)
+und vermeidet spätere Implementierungs-Unklarheiten.
