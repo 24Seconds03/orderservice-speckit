@@ -178,3 +178,8 @@ und vermeidet spätere Implementierungs-Unklarheiten.
   - `specs/001-draft-order-service/quickstart.md`
   - `specs/001-draft-order-service/contracts/openapi.yaml`
 - Zusätzlich wurde AGENTS.md aktualisiert (Agent-Kontext).
+
+## Schritt 3.1 – Feinschliff: Konsistenz (Cents + Contract + Quickstart)
+
+- Preis-Snapshot auf `unit_price_cents` vereinheitlicht (Spec/Contract/Data Model/Quickstart).
+- Quickstart Curl-Examples an Contract angepasst.
