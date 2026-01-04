@@ -22,10 +22,10 @@ description: "Tasks for implementing the Draft Order Microservice"
 
 **Purpose**: Project initialization and repository structure
 
-- [ ] T001 Create package structure in `src/order_service/` (api/, application/, adapters/, domain/) and add `__init__.py` markers
-- [ ] T002 [P] Define runtime dependencies in `requirements.txt`
-- [ ] T003 [P] Define dev tooling config in `pyproject.toml` (pytest + ruff)
-- [ ] T004 [P] Add Docker build configuration in `Dockerfile` and `.dockerignore`
+- [x] T001 Create package structure in `src/order_service/` (api/, application/, adapters/, domain/) and add `__init__.py` markers
+- [x] T002 [P] Define runtime dependencies in `requirements.txt`
+- [x] T003 [P] Define dev tooling config in `pyproject.toml` (pytest + ruff)
+- [x] T004 [P] Add Docker build configuration in `Dockerfile` and `.dockerignore`
 
 ---
 

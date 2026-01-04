@@ -1,0 +1,30 @@
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+.venv
+venv
+.pytest_cache
+.ruff_cache
+.mypy_cache
+
+# Tests and local artifacts
+tests
+coverage
+*.db
+*.sqlite
+*.sqlite3
+
+# Env / secrets
+.env*
+
+# Editors/OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
