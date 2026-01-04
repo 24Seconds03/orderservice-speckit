@@ -1,0 +1,281 @@
+openapi: 3.0.3
+info:
+  title: order-service API
+  version: 0.1.0
+  description: |
+    MVP order-service for draft order lifecycle (DDD single aggregate: Order).
+servers:
+  - url: http://localhost:8000
+paths:
+  /customers/{customer_id}/orders/draft:
+    post:
+      summary: Create or get existing draft order
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Existing or newly created draft order
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderReadModel' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  /customers/{customer_id}/orders/{order_id}:
+    get:
+      summary: Get order read model
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: order_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Order read model
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderReadModel' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /customers/{customer_id}/orders/{order_id}/items:
+    post:
+      summary: Add item to a draft order
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: order_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AddItemRequest' }
+      responses:
+        '200':
+          description: Updated order
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderReadModel' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  /customers/{customer_id}/orders/{order_id}/items/{product_id}:
+    delete:
+      summary: Remove item from a draft order
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: order_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: product_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Updated order
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderReadModel' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /customers/{customer_id}/orders/{order_id}/shipping-address:
+    put:
+      summary: Set/replace shipping address on a draft order
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: order_id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ShippingAddress' }
+      responses:
+        '200':
+          description: Updated order
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderReadModel' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+  /customers/{customer_id}/orders/{order_id}/submit:
+    post:
+      summary: Submit a draft order (DRAFT -> SUBMITTED)
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: order_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Submitted order
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderReadModel' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /payments/confirmations:
+    post:
+      summary: Confirm payment (external callback)
+      description: |
+        Trust/auth is out of scope for MVP; simulated via a shared token header.
+        Idempotent: duplicate confirmations must not emit duplicate PaymentConfirmed events.
+      parameters:
+        - name: X-Callback-Token
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ConfirmPaymentRequest' }
+      responses:
+        '200':
+          description: Paid order (or already-paid order for duplicate callback)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderReadModel' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
+components:
+  schemas:
+    OrderStatus:
+      type: string
+      enum: [DRAFT, SUBMITTED, PAID]
+
+    MoneySnapshot:
+      type: object
+      additionalProperties: false
+      required: [unit_price, currency]
+      properties:
+        unit_price:
+          type: string
+          description: Decimal formatted as string
+          example: '199.99'
+        currency:
+          type: string
+          example: EUR
+
+    OrderItem:
+      type: object
+      additionalProperties: false
+      required: [product_id, quantity, price]
+      properties:
+        product_id: { type: string }
+        product_name: { type: string, nullable: true }
+        quantity: { type: integer, minimum: 1 }
+        price: { $ref: '#/components/schemas/MoneySnapshot' }
+
+    ShippingAddress:
+      type: object
+      additionalProperties: false
+      required: [recipient_name, street, postal_code, city, country]
+      properties:
+        recipient_name: { type: string }
+        street: { type: string }
+        postal_code: { type: string }
+        city: { type: string }
+        country: { type: string }
+
+    OrderReadModel:
+      type: object
+      additionalProperties: false
+      required: [order_id, customer_id, status, items]
+      properties:
+        order_id: { type: string }
+        customer_id: { type: string }
+        status: { $ref: '#/components/schemas/OrderStatus' }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/OrderItem' }
+        shipping_address:
+          allOf: [{ $ref: '#/components/schemas/ShippingAddress' }]
+          nullable: true
+        payment_reference:
+          type: string
+          nullable: true
+
+    AddItemRequest:
+      type: object
+      additionalProperties: false
+      required: [product_id, quantity, unit_price, currency]
+      properties:
+        product_id: { type: string }
+        product_name: { type: string, nullable: true }
+        quantity: { type: integer, minimum: 1 }
+        unit_price:
+          type: string
+          description: Decimal formatted as string
+        currency:
+          type: string
+          example: EUR
+
+    ConfirmPaymentRequest:
+      type: object
+      additionalProperties: false
+      required: [order_id, payment_reference]
+      properties:
+        order_id: { type: string }
+        payment_reference: { type: string }
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error_code, message]
+      properties:
+        error_code: { type: string }
+        message: { type: string }
+        details:
+          type: object
+          nullable: true
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    Conflict:
+      description: Lifecycle/invariant violation
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
+    ValidationError:
+      description: Request validation error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorResponse' }
