@@ -101,12 +101,7 @@ docker build -t order-service .
 **Windows (PowerShell):**
 ```powershell
 # Container mit Volume für persistente Datenbank starten
-docker run -d `
-  --name order-service `
-  -p 8000:8000 `
-  -v ${PWD}/data:/data `
-  -e CALLBACK_TOKEN=dev-token `
-  order-service
+docker run -d --name order-service -p 8000:8000 -v ${PWD}/data:/data -e CALLBACK_TOKEN=dev-token order-service
 ```
 
 **Linux/macOS:**
