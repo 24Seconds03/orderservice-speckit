@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  order-service:
+    build: .
+    container_name: order-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/data
+    environment:
+      - DATABASE_URL=sqlite:////data/orders.db
+      - CALLBACK_TOKEN=dev-token
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs').read()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

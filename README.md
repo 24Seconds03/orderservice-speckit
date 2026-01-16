@@ -84,29 +84,49 @@ Der Server läuft dann auf: `http://localhost:8000`
 
 ## Docker
 
-### Docker Image bauen
+### Docker Compose (Empfohlen)
 
-**Windows (PowerShell):**
-```powershell
-docker build -t order-service .
+Die einfachste Methode, den Service zu starten:
+
+```bash
+docker compose up
 ```
 
-**Linux/macOS:**
+Das war's! Der Service wird automatisch gebaut und gestartet. Die API ist dann verfügbar unter `http://localhost:8000`.
+
+**Im Hintergrund starten:**
+```bash
+docker compose up -d
+```
+
+**Service stoppen:**
+```bash
+docker compose down
+```
+
+**Logs anzeigen:**
+```bash
+docker compose logs -f
+```
+
+**Service neu starten:**
+```bash
+docker compose restart
+```
+
+**Hinweis:** Die Datenbank wird im `data/` Verzeichnis persistiert. Falls das Verzeichnis nicht existiert, wird es automatisch erstellt.
+
+### Docker ohne Compose (Alternative)
+
+Falls Sie Docker Compose nicht verwenden möchten:
+
+**Image bauen:**
 ```bash
 docker build -t order-service .
 ```
 
-### Container starten
-
-**Windows (PowerShell):**
-```powershell
-# Container mit Volume für persistente Datenbank starten
-docker run -d --name order-service -p 8000:8000 -v ${PWD}/data:/data -e CALLBACK_TOKEN=dev-token order-service
-```
-
-**Linux/macOS:**
+**Container starten:**
 ```bash
-# Container mit Volume für persistente Datenbank starten
 docker run -d \
   --name order-service \
   -p 8000:8000 \
@@ -115,59 +135,19 @@ docker run -d \
   order-service
 ```
 
-### Container verwalten
-
-**Container stoppen:**
+**Container verwalten:**
 ```bash
+# Container stoppen
 docker stop order-service
-```
 
-**Container starten:**
-```bash
+# Container starten
 docker start order-service
-```
 
-**Container entfernen:**
-```bash
+# Container entfernen
 docker rm -f order-service
-```
 
-**Logs anzeigen:**
-```bash
+# Logs anzeigen
 docker logs -f order-service
-```
-
-**In laufenden Container einsteigen:**
-```bash
-docker exec -it order-service /bin/bash
-```
-
-**Hinweis:** Die Datenbank wird im Container unter `/data/orders.db` gespeichert. Durch das Volume-Mapping (`-v`) wird die Datenbank auf dem Host-System im `data/` Verzeichnis persistiert. Falls das Verzeichnis nicht existiert, wird es automatisch erstellt.
-
-### Docker Compose (Optional)
-
-Falls Sie `docker-compose` verwenden möchten, können Sie eine `docker-compose.yml` Datei erstellen:
-
-```yaml
-version: '3.8'
-
-services:
-  order-service:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./data:/data
-    environment:
-      - DATABASE_URL=sqlite:////data/orders.db
-      - CALLBACK_TOKEN=dev-token
-    restart: unless-stopped
-```
-
-Dann können Sie den Service starten mit:
-
-```bash
-docker-compose up -d
 ```
 
 ### API Dokumentation
