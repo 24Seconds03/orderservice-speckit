@@ -157,6 +157,34 @@ Nach dem Starten des Servers ist die interaktive API-Dokumentation verfügbar:
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
 
+### Postman Collection
+
+Eine vorkonfigurierte Postman Collection mit Beispiel-Requests ist verfügbar:
+
+**Collection importieren:**
+
+1. Postman öffnen
+2. **Import** klicken (oben links)
+3. Datei `Postman_LiveDemo.json` auswählen und importieren
+
+**Environment-Variablen einrichten:**
+
+1. In Postman: **Environments** → **+** (neues Environment erstellen)
+2. Folgende Variablen hinzufügen:
+   - `baseUrl`: `http://localhost:8000`
+   - `customerId`: `demo-123` (wird automatisch generiert, wenn nicht gesetzt)
+   - `orderId`: (wird automatisch gesetzt nach Create Draft)
+   - `productId`: `prod-001` (oder beliebiger Produkt-ID)
+   - `callbackToken`: `dev-token`
+
+**Collection ausführen:**
+
+- **Happy Path**: Kompletter Workflow von Draft Order bis Payment Confirmation
+- **Error Handling (Correct)**: Testfälle für korrekte Fehlerbehandlung
+- **Error Handling (Incorrect)**: Testfälle für Edge Cases
+
+**Tipp:** Die Collection kann auch als **Collection Runner** ausgeführt werden, um alle Requests automatisch nacheinander zu testen.
+
 ## API Endpunkte
 
 ### 1. Draft Order erstellen oder abrufen
